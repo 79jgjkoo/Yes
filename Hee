@@ -1,0 +1,60 @@
+local formatNumber = (function (n) n = tostring(n) return n:reverse():gsub("%d%d%d", "%1,"):reverse():gsub("^,", "") end) 
+local lastCashAfterCallTime = 0
+function CashAfter()
+    pcall(function()
+        local TimeInUnix = os.time()
+        local stringToFormat = "%I:%M %p"
+        _G.time = os.date(stringToFormat, TimeInUnix)
+        local elapsedTime = 0  -- เริ่มต้น elapsedTime เป็น 0
+        if lastCashAfterCallTime ~= 0 then
+            local currentTime = os.time()
+            elapsedTime = currentTime - lastCashAfterCallTime  -- คำนวณ elapsedTime
+        end
+        local footerText
+        if lastCashAfterCallTime == 0 then
+            footerText = _G.time
+        else
+            footerText = _G.time.." | ใช้เวลาฟาร์ม : "..elapsedTime.." วินาที"
+        end
+        local data = {
+            content = "",
+            embeds = {{
+                title = "🔔 แจ้งเตือนเงิน xxx",
+                description = "🆔 : "..game:GetService("Players").LocalPlayer.Name.."\n📦 : ส่งของไป "..CountBox.." ครั้ง \n".."💰 : "..formatNumber(game:GetService("Players").LocalPlayer.leaderstats.Cash.Value).." (+"..formatNumber(CashPlus)..")",
+                color = 16764928,
+                author = {
+                    name = "🐔 | Apk Shop <3",
+                    icon_url = ""
+                },
+                footer = {
+                    text = footerText
+                },
+                thumbnail = {
+                    url = "https://img.freepik.com/free-vector/money-bag-background-design_1270-41.jpg?w=360"
+                },
+            }},
+            username = "Apk Shop",
+            avatar_url = "https://img.freepik.com/premium-vector/rubber-duck_94396-35.jpg?w=2000"
+        }
+        local newdata = game:GetService("HttpService"):JSONEncode(data)
+        
+        local headers = {
+            ["content-type"] = "application/json"
+        }
+        
+        request = http_request or request or HttpPost or syn.request
+        request({Url = getgenv().Webhook, Body = newdata, Method = "POST", Headers = headers})
+        lastCashAfterCallTime = os.time() 
+        print("Send!")
+    end)
+end
+
+CountBox = 0
+CashPlus = 0
+OldCash = game:GetService("Players").LocalPlayer.leaderstats.Cash.Value
+game:GetService("Players").LocalPlayer.leaderstats.Cash:GetPropertyChangedSignal("Value"):Connect(function()
+    repeat wait() until game:GetService("Players").LocalPlayer.leaderstats.Cash.Value > OldCash
+    CountBox += 1
+    CashPlus = (game:GetService("Players").LocalPlayer.leaderstats.Cash.Value - OldCash)
+    CashAfter()
+end)    
