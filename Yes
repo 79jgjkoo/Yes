@@ -1,0 +1,88 @@
+local formatNumber = (function (n) n = tostring(n) return n:reverse():gsub("%d%d%d", "%1,"):reverse():gsub("^,", "") end) 
+local lastCashAfterCallTime = 0
+function CashAfter()
+    pcall(function()
+        local TimeInUnix = os.time()
+        local stringToFormat = "%I:%M %p"
+        _G.time = os.date(stringToFormat, TimeInUnix)
+        local elapsedTime = 0  -- เริ่มต้น elapsedTime เป็น 0
+        if lastCashAfterCallTime ~= 0 then
+            local currentTime = os.time()
+            elapsedTime = currentTime - lastCashAfterCallTime  -- คำนวณ elapsedTime
+        end
+        local footerText
+        if lastCashAfterCallTime == 0 then
+            footerText = _G.time
+        else
+            footerText = _G.time.." | ใช้เวลาฟาร์ม : "..elapsedTime.." วินาที"
+        end
+        local data = {
+            content = "",
+            embeds = {{
+                title = "🔔 แจ้งเตือนเงิน xxx",
+                description = "🆔 : "..game:GetService("Players").LocalPlayer.Name.."\n📦 : ส่งของไป "..CountBox.." ครั้ง \n".."💰 : "..formatNumber(game:GetService("Players").LocalPlayer.leaderstats.Cash.Value).." (+"..formatNumber(CashPlus)..")",
+                color = 16764928,
+                author = {
+                    name = "🐔 | Apk Shop <3",
+                    icon_url = ""
+                },
+                footer = {
+                    text = footerText
+                },
+                thumbnail = {
+                    url = "https://img.freepik.com/free-vector/money-bag-background-design_1270-41.jpg?w=360"
+                },
+            }},
+            username = "Apk Shop",
+            avatar_url = "https://img.freepik.com/premium-vector/rubber-duck_94396-35.jpg?w=2000"
+        }
+        local newdata = game:GetService("HttpService"):JSONEncode(data)
+        
+        local headers = {
+            ["content-type"] = "application/json"
+        }
+        
+        request = http_request or request or HttpPost or syn.request
+        request({Url = getgenv().Webhook, Body = newdata, Method = "POST", Headers = headers})
+        lastCashAfterCallTime = os.time() 
+        print("Send!")
+    end)
+end
+
+CountBox = 0
+CashPlus = 0
+OldCash = game:GetService("Players").LocalPlayer.leaderstats.Cash.Value
+game:GetService("Players").LocalPlayer.leaderstats.Cash:GetPropertyChangedSignal("Value"):Connect(function()
+    repeat wait() until game:GetService("Players").LocalPlayer.leaderstats.Cash.Value > OldCash
+    CountBox += 1
+    CashPlus = (game:GetService("Players").LocalPlayer.leaderstats.Cash.Value - OldCash)
+    CashAfter()
+end)    
+wait(.1)
+local Box = game.CoreGui:FindFirstChild("Box") if Box then 
+        Box1:Destory()
+        end
+    end
+local Box = Instance.new("ScreenGui")
+local Box1 = Instance.new("TextButton")
+Box.Name = "Box"
+Box.Parent = game.CoreGui
+Box.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Box1.Name = "Box1"
+Box1.Parent = Box
+Box1.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Box1.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Box1.BorderSizePixel = 0
+Box1.Position = UDim2.new(0, 0, 0.449056596, 0)
+Box1.Size = UDim2.new(0, 102, 0, 54)
+Box1.Font = Enum.Font.Unknown
+Box1.Text = "OPEN/CLOSE"
+Box1.TextColor3 = Color3.fromRGB(85, 255, 0)
+Box1.TextSize = 14.000
+Box1.MouseButton1Click:Connect(function()
+game.CoreGui:FindFirstChild("ScreenGui").Enabled = not game.CoreGui:FindFirstChild("ScreenGui").Enabled
+end)
+UICorner.Parent = Box1
+wait(.1)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/x3fall3nangel/FallAngelHub/main/DriveWorld.lua"))()
+
